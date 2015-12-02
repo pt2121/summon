@@ -15,7 +15,6 @@ class LoginController : UIViewController(), UIWebViewDelegate {
   override fun viewDidLoad() {
     super.viewDidLoad()
 
-    println("viewDidLoad")
     configureWebView()
     loadAddressURL()
   }
@@ -28,7 +27,6 @@ class LoginController : UIViewController(), UIWebViewDelegate {
 
   private fun loadAddressURL() {
     val requestURL = NSURL(Uber.LOGIN_URL)
-    println("loadAddressURL " + requestURL.absoluteString)
     val request = NSURLRequest(requestURL)
     webView!!.loadRequest(request)
   }
@@ -44,7 +42,6 @@ class LoginController : UIViewController(), UIWebViewDelegate {
     println(urlStr)
     if (urlStr.startsWith(Uber.REDIRECT_URL)) {
       val authCode = request.url.query.split("code=").last()
-      println("authCode $authCode")
       Uber.newInstance().auth(authCode)
       return false
     } else return true
@@ -61,7 +58,7 @@ class LoginController : UIViewController(), UIWebViewDelegate {
   override fun didFailLoad(webView: UIWebView, error: NSError?) {
     // Report the error inside the web view.
     val errorMessage = "An error occurred:"
-    val errorFormatString = "<!doctype html><html><body><div style=\"width: 100%%; text-align: center; font-size: 36pt;\">%s%s</div></body></html>"
+    val errorFormatString = "<!doctype html><html><style type=\"text/css\">#center { top: 50%%; position:fixed; }</style><body><div id=\"center\" style=\"width: 100%%; text-align: center; font-size: 36pt;\">%s%s</div></body></html>"
 
     val errorHTML = errorFormatString.format(errorMessage, error?.localizedDescription)
     webView.loadHTML(errorHTML, null)

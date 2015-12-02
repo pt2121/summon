@@ -25,7 +25,6 @@ class Uber {
             } else {
               null
             }
-            println("token $token")
           }
 
           override fun onFailure(t: Throwable?) {
@@ -51,7 +50,6 @@ class Uber {
     val REDIRECT_URL = "https://localhost:8000"
     val GRANT_TYPE = "authorization_code"
     val LOGIN_URL = "${LOGIN_BASE_URL}oauth/authorize?response_type=code&client_id=$ID&scope=profile+request&redirect_uri=https%3A%2F%2Flocalhost:8000"   //$REDIRECT_URL"
-    //val LOGIN_URL = "https://login.uber.com/oauth/authorize?response_type=code&client_id=SbShEB9EQK8Kz1NwkUyVMkFdrQtYhRhE&scope=profile+request&redirect_uri=https%3A%2F%2Flocalhost:8000"
     fun newInstance(): Uber = Uber()
   }
 }
