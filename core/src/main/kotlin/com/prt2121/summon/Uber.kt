@@ -7,23 +7,21 @@ import retrofit.http.Query
 /**
  * Created by pt2121 on 12/1/15.
  */
-class Uber {
+class Uber() {
 
   private fun api(): Api {
     val retrofit = Retrofit.Builder().baseUrl(LOGIN_BASE_URL).addConverterFactory(GsonConverterFactory.create()).build()
     return retrofit.create(Api::class.java)
   }
 
-  fun auth(code: String) {
+  fun auth(code: String, storage: ITokenStorage) {
     val api = api()
     api.authToken(SECRET, ID, GRANT_TYPE, code, REDIRECT_URL)
         .enqueue(object : Callback<AuthResponse> {
           override fun onResponse(response: Response<AuthResponse>?, retrofit: Retrofit?) {
-            val token = if (response!!.isSuccess) {
+            if (response!!.isSuccess) {
               val body = response.body()
-              body.accessToken
-            } else {
-              null
+              storage.save(body.accessToken)
             }
           }
 
@@ -50,6 +48,6 @@ class Uber {
     val REDIRECT_URL = "https://localhost:8000"
     val GRANT_TYPE = "authorization_code"
     val LOGIN_URL = "${LOGIN_BASE_URL}oauth/authorize?response_type=code&client_id=$ID&scope=profile+request&redirect_uri=https%3A%2F%2Flocalhost:8000"   //$REDIRECT_URL"
-    fun newInstance(): Uber = Uber()
+    val instance = Uber()
   }
 }

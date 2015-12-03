@@ -8,7 +8,6 @@ import org.robovm.apple.uikit.UIApplicationLaunchOptions
 class Main : UIApplicationDelegateAdapter() {
 
   override fun didFinishLaunching(application: UIApplication?, launchOptions: UIApplicationLaunchOptions?): Boolean {
-    println("didFinishLaunching")
     return true
   }
 
