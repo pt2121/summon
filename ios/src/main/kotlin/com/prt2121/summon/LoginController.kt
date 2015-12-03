@@ -56,18 +56,16 @@ class LoginController : UIViewController(), UIWebViewDelegate {
 
   override fun didFailLoad(webView: UIWebView, error: NSError?) {
     val token = TokenStorage.retrieve()
-    val formatString = "<!doctype html><html><style type=\"text/css\">#center { top: 50%%; position:fixed; }</style><body><div id=\"center\" style=\"width: 100%%; text-align: center; font-size: 36pt;\">%s%s</div></body></html>"
     if (token == null) {
       // Report the error inside the web view.
+      val formatString = "<!doctype html><html><style type=\"text/css\">#center { top: 50%%; position:fixed; }</style><body><div id=\"center\" style=\"width: 100%%; text-align: center; font-size: 36pt;\">%s%s</div></body></html>"
       val errorMessage = "An error occurred:"
       val html = formatString.format(errorMessage, error?.localizedDescription)
       webView.loadHTML(html, null)
       UIApplication.getSharedApplication().isNetworkActivityIndicatorVisible = false
     } else {
-      println("TokenStorage ${TokenStorage.retrieve()}")
-      //performSegue("ResultScreen", this)
+      performSegue("ContactScreen", this)
     }
-
   }
 
 }

@@ -24,4 +24,7 @@
     <pattern>com.android.org.bouncycastle.crypto.digests.AndroidDigestFactoryOpenSSL</pattern>
     <pattern>org.apache.harmony.security.provider.**</pattern>
   </forceLinkClasses>
+  <frameworks>
+    <framework>MapKit</framework>
+  </frameworks>
 </config>

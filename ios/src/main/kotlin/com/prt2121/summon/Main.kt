@@ -8,6 +8,11 @@ import org.robovm.apple.uikit.UIApplicationLaunchOptions
 class Main : UIApplicationDelegateAdapter() {
 
   override fun didFinishLaunching(application: UIApplication?, launchOptions: UIApplicationLaunchOptions?): Boolean {
+    val token = TokenStorage.retrieve()
+    if (token != null) {
+      println("token $token")
+      window.rootViewController = window.rootViewController.storyboard.instantiateViewController("RootNavController")
+    }
     return true
   }
 
