@@ -7,7 +7,7 @@ import retrofit.http.Query
 /**
  * Created by pt2121 on 12/1/15.
  */
-class Uber() {
+class Uber {
 
   private fun api(): Api {
     val retrofit = Retrofit.Builder().baseUrl(LOGIN_BASE_URL).addConverterFactory(GsonConverterFactory.create()).build()

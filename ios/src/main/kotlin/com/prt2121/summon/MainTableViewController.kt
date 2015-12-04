@@ -191,7 +191,6 @@ class MainTableViewController : BaseTableViewController(), UISearchResultsUpdati
 
   private fun checkAuthorization() {
     val status = CNContactStore.getAuthorizationStatusForEntityType(CNEntityType.Contacts)
-    //authStatus = status
     when (status) {
       CNAuthorizationStatus.Authorized -> {
         showAllContacts()

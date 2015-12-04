@@ -81,7 +81,9 @@
                                 <animations/>
                                 <color key="backgroundColor" red="0.13725490200000001" green="0.14901960780000001" blue="0.1647058824" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
-                                <state key="normal" title="Request"/>
+                                <state key="normal" title="Request">
+                                    <color key="titleColor" red="0.64313725489999995" green="0.91372549020000005" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bring" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C2m-fO-Bll">
                                 <rect key="frame" x="24" y="254" width="552" height="21"/>
