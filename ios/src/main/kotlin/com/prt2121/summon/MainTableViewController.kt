@@ -22,7 +22,6 @@ class MainTableViewController : BaseTableViewController(), UISearchResultsUpdati
   private var searchControllerWasActive: Boolean = false
   private var searchControllerSearchFieldWasFirstResponder: Boolean = false
   private var store = CNContactStore()
-  private var indicator: UIActivityIndicatorView? = null
 
   override fun viewDidLoad() {
     super.viewDidLoad()
@@ -216,19 +215,24 @@ class MainTableViewController : BaseTableViewController(), UISearchResultsUpdati
   }
 
   private fun showAllContacts() {
-    indicator = UIActivityIndicatorView(UIActivityIndicatorViewStyle.WhiteLarge)
-    indicator!!.center = tableView.center
-    indicator!!.isHidden = false
-    indicator!!.setHidesWhenStopped(true)
-    indicator!!.startAnimating()
-    tableView.addSubview(indicator)
-    tableView.bringSubviewToFront(indicator)
     DispatchQueue.getMainQueue().async {
+      val indicator = createLoadingIndicator()
+      tableView.addSubview(indicator)
+      tableView.bringSubviewToFront(indicator)
       contacts = fetchContacts("")
       tableView?.reloadData()
-      indicator!!.stopAnimating()
+      indicator.stopAnimating()
       tableView.willRemoveSubview(indicator)
     }
+  }
+
+  private fun createLoadingIndicator(): UIActivityIndicatorView {
+    val indicator = UIActivityIndicatorView(UIActivityIndicatorViewStyle.WhiteLarge)
+    indicator.center = tableView.center
+    indicator.isHidden = false
+    indicator.setHidesWhenStopped(true)
+    indicator.startAnimating()
+    return indicator
   }
 
   private fun fetchContacts(name: String): Array<CNContact> {
