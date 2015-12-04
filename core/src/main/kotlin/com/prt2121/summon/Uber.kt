@@ -14,7 +14,7 @@ class Uber {
     return retrofit.create(Api::class.java)
   }
 
-  fun auth(code: String, storage: ITokenStorage) {
+  fun auth(code: String, storage: ITokenStorage, onCompleted: (Boolean) -> Unit) {
     val api = api()
     api.authToken(SECRET, ID, GRANT_TYPE, code, REDIRECT_URL)
         .enqueue(object : Callback<AuthResponse> {
@@ -22,11 +22,13 @@ class Uber {
             if (response!!.isSuccess) {
               val body = response.body()
               storage.save(body.accessToken)
+              onCompleted.invoke(true)
             }
           }
 
           override fun onFailure(t: Throwable?) {
             println("failed ${t?.message}")
+            onCompleted.invoke(false)
           }
         })
   }

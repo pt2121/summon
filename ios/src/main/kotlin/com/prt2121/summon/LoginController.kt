@@ -41,7 +41,9 @@ class LoginController : UIViewController(), UIWebViewDelegate {
     val urlStr = request.url.absoluteString
     if (urlStr.startsWith(Uber.REDIRECT_URL)) {
       val authCode = request.url.query.split("code=").last()
-      Uber.instance.auth(authCode, TokenStorage)
+      Uber.instance.auth(authCode, TokenStorage) { success ->
+        if (success) performSegue("ContactScreen", this)
+      }
       return false
     } else return true
   }
