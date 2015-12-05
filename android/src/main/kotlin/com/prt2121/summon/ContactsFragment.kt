@@ -90,7 +90,7 @@ class ContactsFragment : Fragment() {
           activity,
           contentUri,
           PROJECTION,
-          null,
+          SELECTION,
           null,
           null)
     }
@@ -110,5 +110,6 @@ class ContactsFragment : Fragment() {
         ContactsContract.Contacts.LOOKUP_KEY,
         ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
         ContactsContract.Contacts.HAS_PHONE_NUMBER)
+    private val SELECTION = "${ContactsContract.Contacts.HAS_PHONE_NUMBER} > 0 "
   }
 }

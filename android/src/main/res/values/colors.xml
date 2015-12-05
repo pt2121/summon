@@ -2,6 +2,6 @@
 <resources>
   <color name="primary">#6385B5</color>
   <color name="primary_dark">#2E3238</color>
-  <color name="divider">#3a3f46</color>
+  <color name="divider">#23262a</color>
   <color name="accent">#A4E9FF</color>
 </resources>

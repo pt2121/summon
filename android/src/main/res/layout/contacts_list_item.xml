@@ -28,6 +28,8 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="vertical"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
         >
 
       <TextView
@@ -35,8 +37,8 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="4dp"
-          android:layout_marginEnd="10dp"
-          android:layout_marginStart="10dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="8dp"
           android:layout_marginTop="4dp"
           android:gravity="center_vertical"
           android:maxLines="1"
@@ -44,21 +46,15 @@
           android:textSize="18sp"
           />
 
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1px"
-          android:background="@color/divider"
-          />
-
       <TextView
           android:id="@+id/phone_number_text_view"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="10dp"
+          android:layout_marginBottom="8dp"
           android:layout_marginEnd="8dp"
-          android:layout_marginLeft="10dp"
+          android:layout_marginLeft="8dp"
           android:layout_marginRight="8dp"
-          android:layout_marginStart="10dp"
+          android:layout_marginStart="8dp"
           android:layout_marginTop="4dp"
           android:maxLines="20"
           android:textColor="@color/primary"
