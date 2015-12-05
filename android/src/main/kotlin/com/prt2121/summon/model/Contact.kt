@@ -7,5 +7,6 @@ import android.net.Uri
 
 data class Contact(
     val profilePic: Uri,
-    val name: String
+    val name: String,
+    val phoneNumber: String
 )

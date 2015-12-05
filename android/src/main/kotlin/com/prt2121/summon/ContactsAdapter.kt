@@ -36,12 +36,11 @@ class ContactsAdapter(private val cursor: Cursor) : RecyclerView.Adapter<Contact
       getPhoneNumber(contactId)
     } else ""
 
-    println("phoneNumber " + phoneNumber)
-    val c = Contact(ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId), contactName)
+    val c = Contact(ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId), contactName, phoneNumber)
     contactViewHolder.bind(c)
   }
 
-  private fun getPhoneNumber(contactId: Long): String? {
+  private fun getPhoneNumber(contactId: Long): String {
     val phones = context!!.contentResolver.query(
         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         null,

@@ -10,6 +10,10 @@ class ContactsActivity : AppCompatActivity() {
   override protected fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_contacts)
-    supportFragmentManager.beginTransaction().add(R.id.fragment_host, ContactsFragment()).commit()
+    if (supportFragmentManager.findFragmentByTag(ContactsFragment.TAG) == null) {
+      supportFragmentManager.beginTransaction()
+          .replace(R.id.fragment_container, ContactsFragment(), ContactsFragment.TAG)
+          .commit()
+    }
   }
 }

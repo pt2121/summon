@@ -3,6 +3,8 @@ package com.prt2121.summon
 /**
  * Created by pt2121 on 12/4/15.
  */
+import android.app.SearchManager
+import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -14,13 +16,25 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.support.v7.widget.SearchView
+import android.view.*
+import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
+import rx.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
 
 class ContactsFragment : Fragment() {
   private var filter: String? = null
   private var recyclerView: RecyclerView? = null
+  private val FILTER_KEY = "FILTER_KEY"
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setHasOptionsMenu(true)
+    retainInstance = true
+    if (savedInstanceState != null) {
+      filter = savedInstanceState.getString(FILTER_KEY)
+    }
+  }
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
     val root = inflater!!.inflate(R.layout.fragment_contacts, container, false)
@@ -33,36 +47,65 @@ class ContactsFragment : Fragment() {
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
 
-    loaderManager.initLoader(0, null, object : LoaderManager.LoaderCallbacks<Cursor> {
-      override fun onCreateLoader(i: Int, bundle: Bundle?): Loader<Cursor> {
-        val contentUri = if (filter != null) {
-          Uri.withAppendedPath(
-              ContactsContract.Contacts.CONTENT_FILTER_URI,
-              Uri.encode(filter))
-        } else {
-          ContactsContract.Contacts.CONTENT_URI
-        }
+    loaderManager.initLoader(0, null, loaderCallbacks)
+  }
 
-        return CursorLoader(
-            activity,
-            contentUri,
-            PROJECTION,
-            null,
-            null,
-            null)
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    outState.putString(FILTER_KEY, filter)
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    inflater.inflate(R.menu.options_menu, menu)
+
+    val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+    val searchView = menu.findItem(R.id.menu_search).actionView as SearchView?
+    if (searchView != null) {
+      searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
+      searchView.setIconifiedByDefault(false)
+      RxSearchView.queryTextChanges(searchView)
+          .filter { it.length > 3 }
+          .throttleWithTimeout(2, TimeUnit.MILLISECONDS)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe({
+            filter = it.toString()
+            loaderManager.restartLoader(0, null, loaderCallbacks)
+          }, { e ->
+            println(e.message)
+          })
+    }
+  }
+
+  private val loaderCallbacks = object : LoaderManager.LoaderCallbacks<Cursor> {
+    override fun onCreateLoader(i: Int, bundle: Bundle?): Loader<Cursor> {
+      val contentUri = if (filter != null) {
+        Uri.withAppendedPath(
+            ContactsContract.Contacts.CONTENT_FILTER_URI,
+            Uri.encode(filter))
+      } else {
+        ContactsContract.Contacts.CONTENT_URI
       }
 
-      override fun onLoadFinished(objectLoader: Loader<Cursor>, c: Cursor) {
-        recyclerView?.adapter = ContactsAdapter(c)
-      }
+      return CursorLoader(
+          activity,
+          contentUri,
+          PROJECTION,
+          null,
+          null,
+          null)
+    }
 
-      override fun onLoaderReset(cursorLoader: Loader<Cursor>) {
-        recyclerView?.adapter = null
-      }
-    })
+    override fun onLoadFinished(objectLoader: Loader<Cursor>, c: Cursor) {
+      recyclerView?.adapter = ContactsAdapter(c)
+    }
+
+    override fun onLoaderReset(cursorLoader: Loader<Cursor>) {
+      recyclerView?.adapter = null
+    }
   }
 
   companion object {
+    val TAG = ContactsFragment::class.java.simpleName
     private val PROJECTION = arrayOf(ContactsContract.Contacts._ID,
         ContactsContract.Contacts.LOOKUP_KEY,
         ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,

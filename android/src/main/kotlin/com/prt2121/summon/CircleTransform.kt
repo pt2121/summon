@@ -5,6 +5,8 @@ import com.squareup.picasso.Transformation
 
 /**
  * Created by pt2121 on 12/4/15.
+ *
+ * CircleTransform for Picasso
  */
 class CircleTransform : Transformation {
   override fun transform(source: Bitmap): Bitmap {
