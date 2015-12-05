@@ -1,26 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_margin="8dp"
-    android:padding="4dp"
+    android:layout_margin="4dp"
+    android:background="@color/primary_dark"
+    android:clickable="true"
     >
 
-  <ImageView
-      android:id="@+id/profile_image_view"
-      android:layout_width="56dp"
-      android:layout_height="56dp"
-      android:contentDescription="@string/profile_picture"
-      />
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:background="@color/primary_dark"
+      >
 
-  <TextView
-      android:id="@+id/tv_label"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:layout_marginLeft="16dp"
-      android:layout_marginStart="16dp"
-      android:gravity="center_vertical"
-      />
+    <ImageView
+        android:id="@+id/profile_image_view"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_margin="8dp"
+        android:transitionName="profile"
+        />
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:id="@+id/contact_title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="4dp"
+          android:layout_marginEnd="10dp"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="4dp"
+          android:gravity="center_vertical"
+          android:maxLines="1"
+          android:textColor="@color/accent"
+          android:textSize="16sp"
+          />
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1px"
+          android:background="@color/divider"
+          />
+
+      <TextView
+          android:id="@+id/description"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="10dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginLeft="10dp"
+          android:layout_marginRight="8dp"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="4dp"
+          android:maxLines="20"
+          android:textColor="@color/primary"
+          android:textSize="12sp"
+          />
+    </LinearLayout>
+  </LinearLayout>
+</android.support.v7.widget.CardView>
+
+    <!--
+    <?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="8dp"
+        android:padding="4dp"
+        >
+
+      <ImageView
+          android:id="@+id/profile_image_view"
+          android:layout_width="56dp"
+          android:layout_height="56dp"
+          android:contentDescription="@string/profile_picture"
+          />
+
+      <TextView
+          android:id="@+id/tv_label"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_marginLeft="16dp"
+          android:layout_marginStart="16dp"
+          android:gravity="center_vertical"
+          />
+
+    </LinearLayout>-->
