@@ -13,7 +13,8 @@ import com.squareup.picasso.Picasso
  */
 class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
   private var image = itemView.findViewById(R.id.profile_image_view) as ImageView
-  private val label = itemView.findViewById(R.id.contact_title) as TextView
+  private val title = itemView.findViewById(R.id.contact_title) as TextView
+  private val number = itemView.findViewById(R.id.phone_number_text_view) as TextView
   private var contact: Contact? = null
 
   init {
@@ -31,7 +32,8 @@ class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
   fun bind(contact: Contact) {
     this.contact = contact
-    label.text = contact.name
+    title.text = contact.name
+    number.text = contact.phoneNumber
     Picasso.with(itemView.context)
         .load(contact.profilePic)
         .placeholder(R.drawable.contact_placeholder)
