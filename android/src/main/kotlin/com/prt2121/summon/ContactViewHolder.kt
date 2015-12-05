@@ -34,8 +34,8 @@ class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     label.text = contact.name
     Picasso.with(itemView.context)
         .load(contact.profilePic)
-        .placeholder(R.mipmap.ic_launcher)
-        .error(R.mipmap.ic_launcher)
+        .placeholder(R.drawable.contact_placeholder)
+        .error(R.drawable.contact_placeholder)
         .transform(CircleTransform())
         .into(image)
   }
