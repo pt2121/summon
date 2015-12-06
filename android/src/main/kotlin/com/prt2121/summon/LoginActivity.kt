@@ -15,7 +15,7 @@ class LoginActivity : AppCompatActivity() {
     window.requestFeature(Window.FEATURE_PROGRESS)
 
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(R.layout.activity_login)
 
     val webView = findViewById(R.id.web_view) as WebView
     webView.settings.javaScriptEnabled = true
