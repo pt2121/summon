@@ -82,6 +82,9 @@ class ContactsFragment : Fragment(), ContactViewHolder.ClickListener {
 
   override fun onItemViewClick(view: View, contact: Contact) {
     val intent = Intent(activity, RequestActivity::class.java)
+    intent.putExtra(RequestActivity.NAME_EXTRA, contact.name)
+    intent.putExtra(RequestActivity.PHONE_NUMBER_EXTRA, contact.phoneNumber)
+    intent.putExtra(RequestActivity.PICTURE_URI_EXTRA, contact.profilePic)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, view.findViewById(R.id.profile_image_view), "profile")
       activity.startActivity(intent, options.toBundle())
