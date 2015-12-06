@@ -5,10 +5,13 @@ package com.prt2121.summon
  */
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.CursorLoader
@@ -19,10 +22,11 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
+import com.prt2121.summon.model.Contact
 import rx.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 
-class ContactsFragment : Fragment() {
+class ContactsFragment : Fragment(), ContactViewHolder.ClickListener {
   private var filter: String? = null
   private var recyclerView: RecyclerView? = null
   private val FILTER_KEY = "FILTER_KEY"
@@ -76,6 +80,16 @@ class ContactsFragment : Fragment() {
     }
   }
 
+  override fun onItemViewClick(view: View, contact: Contact) {
+    val intent = Intent(activity, RequestActivity::class.java)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, view.findViewById(R.id.profile_image_view), "profile")
+      activity.startActivity(intent, options.toBundle())
+    } else {
+      activity.startActivity(intent)
+    }
+  }
+
   private val loaderCallbacks = object : LoaderManager.LoaderCallbacks<Cursor> {
     override fun onCreateLoader(i: Int, bundle: Bundle?): Loader<Cursor> {
       val contentUri = if (filter != null) {
@@ -96,7 +110,7 @@ class ContactsFragment : Fragment() {
     }
 
     override fun onLoadFinished(objectLoader: Loader<Cursor>, c: Cursor) {
-      recyclerView?.adapter = ContactsAdapter(c)
+      recyclerView?.adapter = ContactsAdapter(c, this@ContactsFragment)
     }
 
     override fun onLoaderReset(cursorLoader: Loader<Cursor>) {

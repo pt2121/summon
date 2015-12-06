@@ -152,6 +152,8 @@
         android:layout_height="@dimen/image_width"
         android:layout_gravity="center"
         android:src="@drawable/contact_placeholder"
+        android:transitionName="profile"
+        android:scaleType="centerCrop"
         app:layout_behavior="com.prt2121.summon.ProfileImageBehavior"
         />
 

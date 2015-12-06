@@ -12,7 +12,7 @@ import com.prt2121.summon.model.Contact
 /**
  * Created by pt2121 on 12/3/15.
  */
-class ContactsAdapter(private val cursor: Cursor) : RecyclerView.Adapter<ContactViewHolder>() {
+class ContactsAdapter(private val cursor: Cursor, val listener: ContactViewHolder.ClickListener) : RecyclerView.Adapter<ContactViewHolder>() {
 
   private val nameColumnIndex: Int = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
   private val idColumnIndex: Int = cursor.getColumnIndex(ContactsContract.Contacts._ID)
@@ -21,9 +21,9 @@ class ContactsAdapter(private val cursor: Cursor) : RecyclerView.Adapter<Contact
 
   override fun onCreateViewHolder(parent: ViewGroup, pos: Int): ContactViewHolder {
     context = parent.context
-    val listItemView = LayoutInflater.from(context).inflate(R.layout.contacts_list_item, parent, false)
+    val itemView = LayoutInflater.from(context).inflate(R.layout.contacts_list_item, parent, false)
 
-    return ContactViewHolder(listItemView)
+    return ContactViewHolder(itemView, listener)
   }
 
   override fun onBindViewHolder(contactViewHolder: ContactViewHolder, pos: Int) {
