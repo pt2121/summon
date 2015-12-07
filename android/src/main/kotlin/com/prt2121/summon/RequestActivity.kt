@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.telephony.SmsManager
 import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
@@ -60,10 +61,21 @@ class RequestActivity : AppCompatActivity(),
     setSupportActionBar(toolbar)
     startAlphaAnimation(title!!, 0, View.INVISIBLE)
     initParallaxValues()
-    requestPermission()
+    requestPermission(ACCESS_FINE_LOCATION, REQUEST_LOCATION, "Location please?") {
+      val loc = UserLocation(this).lastBestLocation(30 * 60 * 1000) // 30 minutes
+      if (loc != null) {
+        latLng = LatLng(loc.latitude, loc.longitude)
+        addressTextView?.text = getAddressString(latLng!!)
+      }
+    }
 
     imageView?.onCreate(null)
     imageView?.getMapAsync(this)
+  }
+
+  private fun sendSms(phoneNumber: String, message: String) {
+    val sms = SmsManager.getDefault()
+    sms.sendTextMessage(phoneNumber, null, message, null, null)
   }
 
   private fun bindActivity() {
@@ -73,10 +85,12 @@ class RequestActivity : AppCompatActivity(),
       override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         if ((event?.action == KeyEvent.ACTION_DOWN) && (event?.keyCode == KeyEvent.KEYCODE_ENTER)) {
           println("enter!")
+          sendSms(phoneNumber!!, v!!.text.toString())
           return true
         }
         if (actionId == EditorInfo.IME_ACTION_SEND) {
           println("send!")
+          sendSms(phoneNumber!!, v!!.text.toString())
           return true
         }
         return false
@@ -106,24 +120,20 @@ class RequestActivity : AppCompatActivity(),
         .into(profileImageView)
   }
 
-  private fun requestPermission() {
-    if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) !== PackageManager.PERMISSION_GRANTED) {
-      if (ActivityCompat.shouldShowRequestPermissionRationale(this@RequestActivity, ACCESS_FINE_LOCATION)) {
-        Snackbar.make(rootLayout, "Location please?", Snackbar.LENGTH_INDEFINITE)
+  private fun requestPermission(permission: String, code: Int, message: String, successAction: () -> Unit) {
+    if (ContextCompat.checkSelfPermission(this, permission) !== PackageManager.PERMISSION_GRANTED) {
+      if (ActivityCompat.shouldShowRequestPermissionRationale(this@RequestActivity, permission)) {
+        Snackbar.make(rootLayout, message, Snackbar.LENGTH_INDEFINITE)
             .setAction("OK", object : View.OnClickListener {
               override fun onClick(view: View) {
-                ActivityCompat.requestPermissions(this@RequestActivity, arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+                ActivityCompat.requestPermissions(this@RequestActivity, arrayOf(permission), code)
               }
             }).show()
       } else {
-        ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+        ActivityCompat.requestPermissions(this, arrayOf(permission), code)
       }
     } else {
-      val loc = UserLocation(this).lastBestLocation(30 * 60 * 1000) // 30 minutes
-      if (loc != null) {
-        latLng = LatLng(loc.latitude, loc.longitude)
-        addressTextView?.text = getAddressString(latLng!!)
-      }
+      successAction()
     }
   }
 
@@ -144,9 +154,9 @@ class RequestActivity : AppCompatActivity(),
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
     if (requestCode == REQUEST_LOCATION) {
       if (Utils.verifyPermissions(grantResults)) {
-        Snackbar.make(rootLayout, "GRANTED", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(rootLayout, "location GRANTED", Snackbar.LENGTH_SHORT).show()
       } else {
-        Snackbar.make(rootLayout, "NOT GRANTED", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(rootLayout, "location NOT GRANTED", Snackbar.LENGTH_SHORT).show()
       }
     } else {
       super.onRequestPermissionsResult(requestCode, permissions, grantResults)

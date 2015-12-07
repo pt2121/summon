@@ -49,7 +49,7 @@ class Uber {
     val ID: String = "SbShEB9EQK8Kz1NwkUyVMkFdrQtYhRhE"
     val REDIRECT_URL = "https://localhost:8000"
     val GRANT_TYPE = "authorization_code"
-    val LOGIN_URL = "${LOGIN_BASE_URL}oauth/authorize?response_type=code&client_id=$ID&scope=profile+request&redirect_uri=https%3A%2F%2Flocalhost:8000"   //$REDIRECT_URL"
+    val LOGIN_URL = "${LOGIN_BASE_URL}oauth/authorize?response_type=code&client_id=$ID&scope=profile+request&redirect_uri=https%3A%2F%2Flocalhost:8000"
     val instance = Uber()
   }
 }
