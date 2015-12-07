@@ -3,6 +3,7 @@ package com.prt2121.summon
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.pm.PackageManager
 import android.graphics.Point
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.prt2121.summon.location.UserLocation
 import com.squareup.picasso.Picasso
+import java.util.*
 
 /**
  * Created by pt2121 on 12/5/15.
@@ -34,6 +36,7 @@ class RequestActivity : AppCompatActivity(),
 
   val titleContainer: RelativeLayout? by bindOptionalView(R.id.request_Layout)
   val title: TextView? by bindOptionalView(R.id.request_toolbar_title)
+  val addressTextView: TextView? by bindOptionalView(R.id.request_address)
   val subtitle: TextView? by bindOptionalView(R.id.request_subtitle)
   val appBarLayout: AppBarLayout? by bindOptionalView(R.id.request_appBarLayout)
   val imageView: MapView? by bindOptionalView(R.id.request_mapImageView)
@@ -106,22 +109,36 @@ class RequestActivity : AppCompatActivity(),
   private fun requestPermission() {
     if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) !== PackageManager.PERMISSION_GRANTED) {
       if (ActivityCompat.shouldShowRequestPermissionRationale(this@RequestActivity, ACCESS_FINE_LOCATION)) {
-        Snackbar.make(rootLayout, "Location please?",
-            Snackbar.LENGTH_INDEFINITE).setAction("OK", object : View.OnClickListener {
-          override fun onClick(view: View) {
-            ActivityCompat.requestPermissions(this@RequestActivity, arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
-          }
-        }).show()
+        Snackbar.make(rootLayout, "Location please?", Snackbar.LENGTH_INDEFINITE)
+            .setAction("OK", object : View.OnClickListener {
+              override fun onClick(view: View) {
+                ActivityCompat.requestPermissions(this@RequestActivity, arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+              }
+            }).show()
       } else {
         ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
       }
     } else {
       val loc = UserLocation(this).lastBestLocation(30 * 60 * 1000) // 30 minutes
-      println("loc ${loc?.latitude} ${loc?.longitude}")
       if (loc != null) {
         latLng = LatLng(loc.latitude, loc.longitude)
+        addressTextView?.text = getAddressString(latLng!!)
       }
     }
+  }
+
+  private fun getAddressString(latLng: LatLng): String {
+    val geocoder = Geocoder(this, Locale.getDefault())
+    val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+    if (addresses.isNotEmpty()) {
+      val maxLine = addresses[0].maxAddressLineIndex - 1
+      var addressStr = ""
+      for (i in 0..maxLine) {
+        addressStr = addressStr.plus(" " + addresses[0].getAddressLine(i))
+      }
+      return addressStr.trim()
+    }
+    return "Your location"
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
