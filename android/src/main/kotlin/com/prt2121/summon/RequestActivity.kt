@@ -1,6 +1,7 @@
 package com.prt2121.summon
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.Manifest.permission.SEND_SMS
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.location.Geocoder
@@ -44,6 +45,7 @@ class RequestActivity : AppCompatActivity(),
   val frameLayout: FrameLayout? by bindOptionalView(R.id.request_frameLayout)
   val toolbar: Toolbar? by bindOptionalView(R.id.main_toolbar)
   val rootLayout: LinearLayout? by bindOptionalView(R.id.request_root_layout)
+  val messageEditText: EditText? by bindOptionalView(R.id.message_editText)
 
   private var phoneNumber: String? = null
   private var pictureUri: Uri? = null
@@ -61,7 +63,7 @@ class RequestActivity : AppCompatActivity(),
     setSupportActionBar(toolbar)
     startAlphaAnimation(title!!, 0, View.INVISIBLE)
     initParallaxValues()
-    requestPermission(ACCESS_FINE_LOCATION, REQUEST_LOCATION, "Location please?") {
+    requestPermission(ACCESS_FINE_LOCATION, REQUEST_LOCATION_PERMISSION, "Allow Summon to get your current location.") {
       val loc = UserLocation(this).lastBestLocation(30 * 60 * 1000) // 30 minutes
       if (loc != null) {
         latLng = LatLng(loc.latitude, loc.longitude)
@@ -74,22 +76,22 @@ class RequestActivity : AppCompatActivity(),
   }
 
   private fun sendSms(phoneNumber: String, message: String) {
-    val sms = SmsManager.getDefault()
-    sms.sendTextMessage(phoneNumber, null, message, null, null)
+    requestPermission(SEND_SMS, REQUEST_SMS_PERMISSION, "Allow Summon to send SMS.") {
+      val sms = SmsManager.getDefault()
+      println("sending $message")
+      sms.sendTextMessage(phoneNumber, null, message, null, null)
+    }
   }
 
   private fun bindActivity() {
     val profileImageView = findViewById(R.id.request_profile_imageView) as ImageView
-    val messageEditText = findViewById(R.id.message_editText) as EditText
-    messageEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+    messageEditText!!.setOnEditorActionListener(object : TextView.OnEditorActionListener {
       override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         if ((event?.action == KeyEvent.ACTION_DOWN) && (event?.keyCode == KeyEvent.KEYCODE_ENTER)) {
-          println("enter!")
           sendSms(phoneNumber!!, v!!.text.toString())
           return true
         }
         if (actionId == EditorInfo.IME_ACTION_SEND) {
-          println("send!")
           sendSms(phoneNumber!!, v!!.text.toString())
           return true
         }
@@ -152,14 +154,33 @@ class RequestActivity : AppCompatActivity(),
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-    if (requestCode == REQUEST_LOCATION) {
-      if (Utils.verifyPermissions(grantResults)) {
-        Snackbar.make(rootLayout, "location GRANTED", Snackbar.LENGTH_SHORT).show()
-      } else {
-        Snackbar.make(rootLayout, "location NOT GRANTED", Snackbar.LENGTH_SHORT).show()
+    when (requestCode) {
+      REQUEST_LOCATION_PERMISSION -> {
+        showRequestPermissionResult(grantResults, "You can grant Location permission in Settings app.")
+        if (Utils.verifyPermissions(grantResults)) {
+          val loc = UserLocation(this).lastBestLocation(30 * 60 * 1000) // 30 minutes
+          if (loc != null) {
+            latLng = LatLng(loc.latitude, loc.longitude)
+            addressTextView?.text = getAddressString(latLng!!)
+          }
+        }
       }
+      REQUEST_SMS_PERMISSION -> {
+        showRequestPermissionResult(grantResults, "You can grant SMS permission in Settings app.")
+        if (Utils.verifyPermissions(grantResults)) {
+          val sms = SmsManager.getDefault()
+          sms.sendTextMessage(phoneNumber, null, messageEditText!!.text.toString(), null, null)
+        }
+      }
+      else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+  }
+
+  private fun showRequestPermissionResult(grantResults: IntArray, noMessage: String, yesMessage: String = "Thanks!") {
+    if (Utils.verifyPermissions(grantResults)) {
+      Snackbar.make(rootLayout, yesMessage, Snackbar.LENGTH_SHORT).show()
     } else {
-      super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+      Snackbar.make(rootLayout, noMessage, Snackbar.LENGTH_SHORT).show()
     }
   }
 
@@ -227,7 +248,8 @@ class RequestActivity : AppCompatActivity(),
     private val PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f
     private val PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f
     private val ALPHA_ANIMATIONS_DURATION = 200
-    private val REQUEST_LOCATION = 123
+    private val REQUEST_LOCATION_PERMISSION = 0
+    private val REQUEST_SMS_PERMISSION = 1
     val NAME_EXTRA = "name_extra"
     val PHONE_NUMBER_EXTRA = "phone_number_extra"
     val PICTURE_URI_EXTRA = "picture_uri_extra"
