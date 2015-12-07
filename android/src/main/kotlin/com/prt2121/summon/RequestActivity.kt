@@ -36,16 +36,16 @@ class RequestActivity : AppCompatActivity(),
     ActivityCompat.OnRequestPermissionsResultCallback,
     OnMapReadyCallback {
 
-  val titleContainer: RelativeLayout? by bindOptionalView(R.id.request_Layout)
-  val title: TextView? by bindOptionalView(R.id.request_toolbar_title)
-  val addressTextView: TextView? by bindOptionalView(R.id.request_address)
-  val subtitle: TextView? by bindOptionalView(R.id.request_subtitle)
-  val appBarLayout: AppBarLayout? by bindOptionalView(R.id.request_appBarLayout)
-  val imageView: MapView? by bindOptionalView(R.id.request_mapImageView)
-  val frameLayout: FrameLayout? by bindOptionalView(R.id.request_frameLayout)
-  val toolbar: Toolbar? by bindOptionalView(R.id.main_toolbar)
-  val rootLayout: LinearLayout? by bindOptionalView(R.id.request_root_layout)
-  val messageEditText: EditText? by bindOptionalView(R.id.message_editText)
+  val titleContainer: RelativeLayout by bindView(R.id.request_Layout)
+  val title: TextView by bindView(R.id.request_toolbar_title)
+  val addressTextView: TextView by bindView(R.id.request_address)
+  val subtitle: TextView by bindView(R.id.request_subtitle)
+  val appBarLayout: AppBarLayout by bindView(R.id.request_appBarLayout)
+  val imageView: MapView by bindView(R.id.request_mapImageView)
+  val frameLayout: FrameLayout by bindView(R.id.request_frameLayout)
+  val toolbar: Toolbar by bindView(R.id.main_toolbar)
+  val rootLayout: LinearLayout by bindView(R.id.request_root_layout)
+  val messageEditText: EditText by bindView(R.id.message_editText)
 
   private var phoneNumber: String? = null
   private var pictureUri: Uri? = null
@@ -58,21 +58,21 @@ class RequestActivity : AppCompatActivity(),
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_request)
     bindActivity()
-    toolbar!!.title = ""
-    appBarLayout!!.addOnOffsetChangedListener(this)
+    toolbar.title = ""
+    appBarLayout.addOnOffsetChangedListener(this)
     setSupportActionBar(toolbar)
-    startAlphaAnimation(title!!, 0, View.INVISIBLE)
+    startAlphaAnimation(title, 0, View.INVISIBLE)
     initParallaxValues()
     requestPermission(ACCESS_FINE_LOCATION, REQUEST_LOCATION_PERMISSION, "Allow Summon to get your current location.") {
       val loc = UserLocation(this).lastBestLocation(30 * 60 * 1000) // 30 minutes
       if (loc != null) {
         latLng = LatLng(loc.latitude, loc.longitude)
-        addressTextView?.text = getAddressString(latLng!!)
+        addressTextView.text = getAddressString(latLng!!)
       }
     }
 
-    imageView?.onCreate(null)
-    imageView?.getMapAsync(this)
+    imageView.onCreate(null)
+    imageView.getMapAsync(this)
   }
 
   private fun sendSms(phoneNumber: String, message: String) {
@@ -85,7 +85,7 @@ class RequestActivity : AppCompatActivity(),
 
   private fun bindActivity() {
     val profileImageView = findViewById(R.id.request_profile_imageView) as ImageView
-    messageEditText!!.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+    messageEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
       override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         if ((event?.action == KeyEvent.ACTION_DOWN) && (event?.keyCode == KeyEvent.KEYCODE_ENTER)) {
           sendSms(phoneNumber!!, v!!.text.toString())
@@ -111,8 +111,8 @@ class RequestActivity : AppCompatActivity(),
     pictureUri = extras?.get(PICTURE_URI_EXTRA) as Uri
     val name = if (nameExtra is String) nameExtra else ""
     phoneNumber = if (numExtra is String) numExtra else ""
-    title!!.text = name
-    subtitle!!.text = "Bring $name to"
+    title.text = name
+    subtitle.text = "Bring $name to"
 
     Picasso.with(this)
         .load(pictureUri)
@@ -161,7 +161,7 @@ class RequestActivity : AppCompatActivity(),
           val loc = UserLocation(this).lastBestLocation(30 * 60 * 1000) // 30 minutes
           if (loc != null) {
             latLng = LatLng(loc.latitude, loc.longitude)
-            addressTextView?.text = getAddressString(latLng!!)
+            addressTextView.text = getAddressString(latLng!!)
           }
         }
       }
@@ -169,7 +169,7 @@ class RequestActivity : AppCompatActivity(),
         showRequestPermissionResult(grantResults, "You can grant SMS permission in Settings app.")
         if (Utils.verifyPermissions(grantResults)) {
           val sms = SmsManager.getDefault()
-          sms.sendTextMessage(phoneNumber, null, messageEditText!!.text.toString(), null, null)
+          sms.sendTextMessage(phoneNumber, null, messageEditText.text.toString(), null, null)
         }
       }
       else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -201,12 +201,12 @@ class RequestActivity : AppCompatActivity(),
   }
 
   private fun initParallaxValues() {
-    val detailsParams = imageView!!.layoutParams as CollapsingToolbarLayout.LayoutParams
-    val backgroundParams = frameLayout!!.layoutParams as CollapsingToolbarLayout.LayoutParams
+    val detailsParams = imageView.layoutParams as CollapsingToolbarLayout.LayoutParams
+    val backgroundParams = frameLayout.layoutParams as CollapsingToolbarLayout.LayoutParams
     detailsParams.parallaxMultiplier = 0.9f
     backgroundParams.parallaxMultiplier = 0.3f
-    imageView!!.layoutParams = detailsParams
-    frameLayout!!.layoutParams = backgroundParams
+    imageView.layoutParams = detailsParams
+    frameLayout.layoutParams = backgroundParams
   }
 
   override fun onOffsetChanged(appBarLayout: AppBarLayout, offset: Int) {
@@ -219,12 +219,12 @@ class RequestActivity : AppCompatActivity(),
   private fun handleToolbarTitleVisibility(percentage: Float) {
     if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
       if (!titleVisible) {
-        startAlphaAnimation(title!!, ALPHA_ANIMATIONS_DURATION.toLong(), View.VISIBLE)
+        startAlphaAnimation(title, ALPHA_ANIMATIONS_DURATION.toLong(), View.VISIBLE)
         titleVisible = true
       }
     } else {
       if (titleVisible) {
-        startAlphaAnimation(title!!, ALPHA_ANIMATIONS_DURATION.toLong(), View.INVISIBLE)
+        startAlphaAnimation(title, ALPHA_ANIMATIONS_DURATION.toLong(), View.INVISIBLE)
         titleVisible = false
       }
     }
@@ -233,12 +233,12 @@ class RequestActivity : AppCompatActivity(),
   private fun handleAlphaOnTitle(percentage: Float) {
     if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
       if (titleContainerVisible) {
-        startAlphaAnimation(titleContainer!!, ALPHA_ANIMATIONS_DURATION.toLong(), View.INVISIBLE)
+        startAlphaAnimation(titleContainer, ALPHA_ANIMATIONS_DURATION.toLong(), View.INVISIBLE)
         titleContainerVisible = false
       }
     } else {
       if (!titleContainerVisible) {
-        startAlphaAnimation(titleContainer!!, ALPHA_ANIMATIONS_DURATION.toLong(), View.VISIBLE)
+        startAlphaAnimation(titleContainer, ALPHA_ANIMATIONS_DURATION.toLong(), View.VISIBLE)
         titleContainerVisible = true
       }
     }
