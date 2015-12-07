@@ -18,19 +18,25 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.prt2121.summon.location.UserLocation
 import com.squareup.picasso.Picasso
 
 /**
  * Created by pt2121 on 12/5/15.
  */
-class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, ActivityCompat.OnRequestPermissionsResultCallback {
+class RequestActivity : AppCompatActivity(),
+    AppBarLayout.OnOffsetChangedListener,
+    ActivityCompat.OnRequestPermissionsResultCallback,
+    OnMapReadyCallback {
 
   val titleContainer: RelativeLayout? by bindOptionalView(R.id.request_Layout)
   val title: TextView? by bindOptionalView(R.id.request_toolbar_title)
   val subtitle: TextView? by bindOptionalView(R.id.request_subtitle)
   val appBarLayout: AppBarLayout? by bindOptionalView(R.id.request_appBarLayout)
-  val imageView: ImageView? by bindOptionalView(R.id.request_mapImageView)
+  val imageView: MapView? by bindOptionalView(R.id.request_mapImageView)
   val frameLayout: FrameLayout? by bindOptionalView(R.id.request_frameLayout)
   val toolbar: Toolbar? by bindOptionalView(R.id.main_toolbar)
   val rootLayout: LinearLayout? by bindOptionalView(R.id.request_root_layout)
@@ -39,6 +45,8 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
   private var pictureUri: Uri? = null
   private var titleVisible = false
   private var titleContainerVisible = true
+  private var googleMap: GoogleMap? = null
+  private var latLng: LatLng? = null
 
   override public fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -50,6 +58,9 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
     startAlphaAnimation(title!!, 0, View.INVISIBLE)
     initParallaxValues()
     requestPermission()
+
+    imageView?.onCreate(null)
+    imageView?.getMapAsync(this)
   }
 
   private fun bindActivity() {
@@ -81,6 +92,7 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
     pictureUri = extras?.get(PICTURE_URI_EXTRA) as Uri
     val name = if (nameExtra is String) nameExtra else ""
     phoneNumber = if (numExtra is String) numExtra else ""
+    title!!.text = name
     subtitle!!.text = "Bring $name to"
 
     Picasso.with(this)
@@ -106,6 +118,9 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
     } else {
       val loc = UserLocation(this).lastBestLocation(30 * 60 * 1000) // 30 minutes
       println("loc ${loc?.latitude} ${loc?.longitude}")
+      if (loc != null) {
+        latLng = LatLng(loc.latitude, loc.longitude)
+      }
     }
   }
 
@@ -119,6 +134,22 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
     } else {
       super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
+  }
+
+  override fun onMapReady(googleMap: GoogleMap) {
+    this.googleMap = googleMap
+    MapsInitializer.initialize(this)
+    googleMap.uiSettings.isMapToolbarEnabled = false
+    if (latLng != null) {
+      updateMapContents(latLng!!)
+    }
+  }
+
+  protected fun updateMapContents(latLng: LatLng) {
+    googleMap?.clear()
+    googleMap?.addMarker(MarkerOptions().position(latLng))
+    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15f)
+    googleMap?.moveCamera(cameraUpdate)
   }
 
   private fun initParallaxValues() {

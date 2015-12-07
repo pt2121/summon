@@ -60,5 +60,6 @@ dependencies {
   compile 'io.reactivex:rxandroid:1.0.1'
   compile 'io.reactivex:rxjava:1.1.0'
   compile 'de.hdodenhof:circleimageview:2.0.0'
+  compile 'com.google.android.gms:play-services-maps:8.3.0'
   compile project(':core')
 }
