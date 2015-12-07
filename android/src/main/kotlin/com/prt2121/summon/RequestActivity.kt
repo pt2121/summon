@@ -25,18 +25,20 @@ import com.squareup.picasso.Picasso
  * Created by pt2121 on 12/5/15.
  */
 class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, ActivityCompat.OnRequestPermissionsResultCallback {
-  private var titleVisible = false
-  private var titleContainerVisible = true
-  private var titleContainer: RelativeLayout? = null
-  private var title: TextView? = null
-  private var subtitle: TextView? = null
-  private var appBarLayout: AppBarLayout? = null
-  private var imageView: ImageView? = null
-  private var frameLayout: FrameLayout? = null
-  private var toolbar: Toolbar? = null
+
+  val titleContainer: RelativeLayout? by bindOptionalView(R.id.request_Layout)
+  val title: TextView? by bindOptionalView(R.id.request_toolbar_title)
+  val subtitle: TextView? by bindOptionalView(R.id.request_subtitle)
+  val appBarLayout: AppBarLayout? by bindOptionalView(R.id.request_appBarLayout)
+  val imageView: ImageView? by bindOptionalView(R.id.request_mapImageView)
+  val frameLayout: FrameLayout? by bindOptionalView(R.id.request_frameLayout)
+  val toolbar: Toolbar? by bindOptionalView(R.id.main_toolbar)
+  val rootLayout: LinearLayout? by bindOptionalView(R.id.request_root_layout)
+
   private var phoneNumber: String? = null
   private var pictureUri: Uri? = null
-  private var rootLayout: LinearLayout? = null
+  private var titleVisible = false
+  private var titleContainerVisible = true
 
   override public fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,34 +49,11 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
     setSupportActionBar(toolbar)
     startAlphaAnimation(title!!, 0, View.INVISIBLE)
     initParallaxValues()
-
-    if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) !== PackageManager.PERMISSION_GRANTED) {
-      if (ActivityCompat.shouldShowRequestPermissionRationale(this@RequestActivity, ACCESS_FINE_LOCATION)) {
-        Snackbar.make(rootLayout, "Location please?",
-            Snackbar.LENGTH_INDEFINITE).setAction("OK", object : View.OnClickListener {
-          override fun onClick(view: View) {
-            ActivityCompat.requestPermissions(this@RequestActivity, arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
-          }
-        }).show()
-      } else {
-        ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
-      }
-    } else {
-      val loc = UserLocation(this).lastBestLocation(30 * 60 * 1000) // 30 minutes
-      println("loc ${loc?.latitude} ${loc?.longitude}")
-    }
+    requestPermission()
   }
 
   private fun bindActivity() {
-    toolbar = findViewById(R.id.main_toolbar) as Toolbar
-    title = findViewById(R.id.request_toolbar_title) as TextView
-    subtitle = findViewById(R.id.request_subtitle) as TextView
-    titleContainer = findViewById(R.id.request_Layout) as RelativeLayout
-    appBarLayout = findViewById(R.id.request_appBarLayout) as AppBarLayout
-    imageView = findViewById(R.id.request_mapImageView) as ImageView
     val profileImageView = findViewById(R.id.request_profile_imageView) as ImageView
-    frameLayout = findViewById(R.id.request_frameLayout) as FrameLayout
-    rootLayout = findViewById(R.id.request_root_layout) as LinearLayout
     val messageEditText = findViewById(R.id.message_editText) as EditText
     messageEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
       override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
@@ -110,6 +89,24 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
         .error(R.drawable.contact_placeholder)
         .transform(CircleTransform())
         .into(profileImageView)
+  }
+
+  private fun requestPermission() {
+    if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) !== PackageManager.PERMISSION_GRANTED) {
+      if (ActivityCompat.shouldShowRequestPermissionRationale(this@RequestActivity, ACCESS_FINE_LOCATION)) {
+        Snackbar.make(rootLayout, "Location please?",
+            Snackbar.LENGTH_INDEFINITE).setAction("OK", object : View.OnClickListener {
+          override fun onClick(view: View) {
+            ActivityCompat.requestPermissions(this@RequestActivity, arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+          }
+        }).show()
+      } else {
+        ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+      }
+    } else {
+      val loc = UserLocation(this).lastBestLocation(30 * 60 * 1000) // 30 minutes
+      println("loc ${loc?.latitude} ${loc?.longitude}")
+    }
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
