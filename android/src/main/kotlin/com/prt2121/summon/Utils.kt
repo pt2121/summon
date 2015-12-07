@@ -1,6 +1,7 @@
 package com.prt2121.summon
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.provider.ContactsContract
 
 /**
@@ -18,5 +19,14 @@ object Utils {
     } else ""
     email.close()
     return emailAddress
+  }
+
+  fun verifyPermissions(grantResults: IntArray): Boolean {
+    // At least one result must be checked.
+    if (grantResults.size < 1) {
+      return false
+    }
+    // Verify that each required permission has been granted, otherwise return false.
+    return grantResults.all { it == PackageManager.PERMISSION_GRANTED }
   }
 }

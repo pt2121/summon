@@ -1,10 +1,15 @@
 package com.prt2121.summon
 
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.pm.PackageManager
 import android.graphics.Point
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CollapsingToolbarLayout
+import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.TypedValue
@@ -13,12 +18,13 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import com.prt2121.summon.location.UserLocation
 import com.squareup.picasso.Picasso
 
 /**
  * Created by pt2121 on 12/5/15.
  */
-class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener {
+class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, ActivityCompat.OnRequestPermissionsResultCallback {
   private var titleVisible = false
   private var titleContainerVisible = true
   private var titleContainer: RelativeLayout? = null
@@ -30,6 +36,7 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
   private var toolbar: Toolbar? = null
   private var phoneNumber: String? = null
   private var pictureUri: Uri? = null
+  private var rootLayout: LinearLayout? = null
 
   override public fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -40,6 +47,22 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
     setSupportActionBar(toolbar)
     startAlphaAnimation(title!!, 0, View.INVISIBLE)
     initParallaxValues()
+
+    if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) !== PackageManager.PERMISSION_GRANTED) {
+      if (ActivityCompat.shouldShowRequestPermissionRationale(this@RequestActivity, ACCESS_FINE_LOCATION)) {
+        Snackbar.make(rootLayout, "Location please?",
+            Snackbar.LENGTH_INDEFINITE).setAction("OK", object : View.OnClickListener {
+          override fun onClick(view: View) {
+            ActivityCompat.requestPermissions(this@RequestActivity, arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+          }
+        }).show()
+      } else {
+        ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+      }
+    } else {
+      val loc = UserLocation(this).lastBestLocation(30 * 60 * 1000) // 30 minutes
+      println("loc ${loc?.latitude} ${loc?.longitude}")
+    }
   }
 
   private fun bindActivity() {
@@ -51,6 +74,7 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
     imageView = findViewById(R.id.request_mapImageView) as ImageView
     val profileImageView = findViewById(R.id.request_profile_imageView) as ImageView
     frameLayout = findViewById(R.id.request_frameLayout) as FrameLayout
+    rootLayout = findViewById(R.id.request_root_layout) as LinearLayout
     val messageEditText = findViewById(R.id.message_editText) as EditText
     messageEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
       override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
@@ -86,6 +110,18 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
         .error(R.drawable.contact_placeholder)
         .transform(CircleTransform())
         .into(profileImageView)
+  }
+
+  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    if (requestCode == REQUEST_LOCATION) {
+      if (Utils.verifyPermissions(grantResults)) {
+        Snackbar.make(rootLayout, "GRANTED", Snackbar.LENGTH_SHORT).show()
+      } else {
+        Snackbar.make(rootLayout, "NOT GRANTED", Snackbar.LENGTH_SHORT).show()
+      }
+    } else {
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
   }
 
   private fun initParallaxValues() {
@@ -136,6 +172,7 @@ class RequestActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
     private val PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f
     private val PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f
     private val ALPHA_ANIMATIONS_DURATION = 200
+    private val REQUEST_LOCATION = 123
     val NAME_EXTRA = "name_extra"
     val PHONE_NUMBER_EXTRA = "phone_number_extra"
     val PICTURE_URI_EXTRA = "picture_uri_extra"
