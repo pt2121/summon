@@ -12,11 +12,11 @@ import com.prt2121.summon.model.Contact
 /**
  * Created by pt2121 on 12/3/15.
  */
-class ContactsAdapter(private val cursor: Cursor, val listener: ContactViewHolder.ClickListener) : RecyclerView.Adapter<ContactViewHolder>() {
+class ContactsAdapter(private val cursor: Cursor?, val listener: ContactViewHolder.ClickListener) : RecyclerView.Adapter<ContactViewHolder>() {
 
-  private val nameColumnIndex: Int = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
-  private val idColumnIndex: Int = cursor.getColumnIndex(ContactsContract.Contacts._ID)
-  private val hasPhoneNumberIndex = cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)
+  private val nameColumnIndex = cursor?.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
+  private val idColumnIndex = cursor?.getColumnIndex(ContactsContract.Contacts._ID)
+  private val hasPhoneNumberIndex = cursor?.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)
   private var context: Context? = null
 
   override fun onCreateViewHolder(parent: ViewGroup, pos: Int): ContactViewHolder {
@@ -27,11 +27,13 @@ class ContactsAdapter(private val cursor: Cursor, val listener: ContactViewHolde
   }
 
   override fun onBindViewHolder(contactViewHolder: ContactViewHolder, pos: Int) {
-    cursor.moveToPosition(pos)
-    val contactName = cursor.getString(nameColumnIndex)
-    val contactId = cursor.getLong(idColumnIndex)
+    if (cursor == null) return
 
-    val hasPhone = if (cursor.getString(hasPhoneNumberIndex) == "1") true else false
+    cursor.moveToPosition(pos)
+    val contactName = cursor.getString(nameColumnIndex!!)
+    val contactId = cursor.getLong(idColumnIndex!!)
+
+    val hasPhone = if (cursor.getString(hasPhoneNumberIndex!!) == "1") true else false
     val phoneNumber = if (hasPhone && context != null) {
       getPhoneNumber(contactId)
     } else ""
@@ -54,6 +56,6 @@ class ContactsAdapter(private val cursor: Cursor, val listener: ContactViewHolde
   }
 
   override fun getItemCount(): Int {
-    return cursor.count
+    return if (cursor == null) 0 else cursor.count
   }
 }

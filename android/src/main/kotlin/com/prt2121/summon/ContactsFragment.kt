@@ -3,9 +3,11 @@ package com.prt2121.summon
 /**
  * Created by pt2121 on 12/4/15.
  */
+import android.Manifest.permission.READ_CONTACTS
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
@@ -14,6 +16,7 @@ import android.provider.ContactsContract
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import android.support.v7.widget.DefaultItemAnimator
@@ -45,14 +48,18 @@ class ContactsFragment : Fragment(), ContactViewHolder.ClickListener {
     recyclerView = root.findViewById(R.id.recycler_view_contacts) as RecyclerView
     recyclerView!!.layoutManager = LinearLayoutManager(activity)
     recyclerView!!.itemAnimator = DefaultItemAnimator()
+    recyclerView?.adapter = ContactsAdapter(null, this@ContactsFragment)
     return root
   }
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
-
-    loaderManager.initLoader(0, null, loaderCallbacks)
+    if (ContextCompat.checkSelfPermission(activity, READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+      initLoader()
+    }
   }
+
+  fun initLoader() = loaderManager.initLoader(0, null, loaderCallbacks)
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
