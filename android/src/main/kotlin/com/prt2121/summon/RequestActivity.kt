@@ -53,6 +53,7 @@ class RequestActivity : AppCompatActivity(),
   private var titleContainerVisible = true
   private var googleMap: GoogleMap? = null
   private var latLng: LatLng? = null
+  private var name: String? = null
 
   override public fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -77,9 +78,29 @@ class RequestActivity : AppCompatActivity(),
 
   private fun sendSms(phoneNumber: String, message: String) {
     requestPermission(SEND_SMS, REQUEST_SMS_PERMISSION, "Allow Summon to send SMS.") {
-      val sms = SmsManager.getDefault()
-      println("sending $message")
-      sms.sendTextMessage(phoneNumber, null, message, null, null)
+      val names = when {
+        name.isNullOrBlank() -> "" to ""
+        " " in name!! -> {
+          val ns = name!!.split(" ")
+          ns[0] to ns[1]
+        }
+        else -> "" to ""
+      }
+      val fromUser = User("Prat", "Tanapaisankit", "9086467097")
+      val toUser = User(names.first, names.second, phoneNumber)
+      val invite = Invite(null,
+          fromUser,
+          toUser,
+          "${latLng?.latitude}, ${latLng?.longitude}",
+          addressTextView.text.toString(),
+          message)
+
+      InviteApi.instance.invite(invite) { invite ->
+        println(invite.toString())
+        val m = "$message http://prt2121.github.io/invite-app/index.html?id=${invite?._id}"
+        val sms = SmsManager.getDefault()
+        sms.sendTextMessage(phoneNumber, null, m, null, null)
+      }
     }
   }
 
@@ -109,7 +130,7 @@ class RequestActivity : AppCompatActivity(),
     val nameExtra = extras?.get(NAME_EXTRA)
     val numExtra = extras?.get(PHONE_NUMBER_EXTRA)
     pictureUri = extras?.get(PICTURE_URI_EXTRA) as Uri
-    val name = if (nameExtra is String) nameExtra else ""
+    name = if (nameExtra is String) nameExtra else ""
     phoneNumber = if (numExtra is String) numExtra else ""
     title.text = name
     subtitle.text = "Bring $name to"
