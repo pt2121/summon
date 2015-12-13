@@ -2,4 +2,6 @@
   <string name="app_name">Summon</string>
   <string name="profile_picture">Profile Picture</string>
   <string name="search_title">Search</string>
+  <string name="hint_your_message">Your message</string>
+  <string name="request">Request</string>
 </resources>

@@ -1,8 +1,6 @@
 package com.prt2121.summon
 
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.Manifest.permission.SEND_SMS
-import android.Manifest.permission.READ_SMS
+import android.Manifest.permission.*
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Point
@@ -49,6 +47,7 @@ class RequestActivity : AppCompatActivity(),
   val toolbar: Toolbar by bindView(R.id.main_toolbar)
   val rootLayout: LinearLayout by bindView(R.id.request_root_layout)
   val messageEditText: EditText by bindView(R.id.message_editText)
+  val requestButton: Button by bindView(R.id.request_button)
 
   private var myNumber: String = ""
   private var phoneNumber: String? = null
@@ -58,6 +57,7 @@ class RequestActivity : AppCompatActivity(),
   private var googleMap: GoogleMap? = null
   private var latLng: LatLng? = null
   private var name: String? = null
+  private var currentInvite: Invite? = null
 
   override public fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -83,6 +83,24 @@ class RequestActivity : AppCompatActivity(),
       val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
       myNumber = telephonyManager.line1Number
     }
+
+    requestButton.setOnClickListener { v ->
+      if (requestButton.text.equals("Request")) {
+        sendSms(phoneNumber!!, messageEditText.text.toString())
+      }
+      if (requestButton.text.equals("Check Status") && currentInvite != null) {
+        InviteApi.instance.query(currentInvite!!._id!!) {
+          invite ->
+          when {
+            invite == null -> Snackbar.make(rootLayout, "Something's wrong", Snackbar.LENGTH_LONG).show()
+            invite.status == Status.PENDING -> Snackbar.make(rootLayout, "Waiting for a response", Snackbar.LENGTH_LONG).show()
+            invite.status == Status.REJECT -> Snackbar.make(rootLayout, "Your request was rejected!", Snackbar.LENGTH_LONG).show()
+            invite.status == Status.CANCEL -> Snackbar.make(rootLayout, "Your request was cancelled!", Snackbar.LENGTH_LONG).show()
+            invite.status == Status.ACCEPT -> println("Yeah") // TODO
+          }
+        }
+      }
+    }
   }
 
   private fun sendSms(phoneNumber: String, message: String) {
@@ -95,7 +113,6 @@ class RequestActivity : AppCompatActivity(),
         }
         else -> "" to ""
       }
-      println("fromUser ${SummonApp.app!!.user!!.firstName}, ${SummonApp.app!!.user!!.lastName}, ${myNumber}")
       val fromUser = User(SummonApp.app!!.user!!.firstName, SummonApp.app!!.user!!.lastName, myNumber)
       val toUser = User(names.first, names.second, phoneNumber)
       val invite = Invite(null,
@@ -106,10 +123,11 @@ class RequestActivity : AppCompatActivity(),
           message)
 
       InviteApi.instance.invite(invite) { invite ->
-        println(invite.toString())
+        currentInvite = invite
         val m = "$message http://prt2121.github.io/invite-app/index.html?id=${invite?._id}"
         val sms = SmsManager.getDefault()
         sms.sendTextMessage(phoneNumber, null, m, null, null)
+        requestButton.text = "Check Status"
       }
     }
   }
