@@ -1,5 +1,6 @@
 package com.prt2121.summon
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -51,12 +52,13 @@ class LoginActivity : AppCompatActivity() {
         val uri = Uri.parse(url)
         val authCode = uri.getQueryParameter("code")
         Uber.instance.auth(authCode) { token ->
-          if(token != null) {
+          if (token != null) {
             TokenStorage(this@LoginActivity).save(token)
-            Uber.instance.me(token) {
-              user -> SummonApp.app!!.user = user
+            Uber.instance.me(token) { user ->
+              SummonApp.app!!.user = user
               setProgressBarIndeterminateVisibility(false)
               setProgressBarVisibility(false)
+              startActivity(Intent(this@LoginActivity, ContactsActivity::class.java))
             }
           }
         }

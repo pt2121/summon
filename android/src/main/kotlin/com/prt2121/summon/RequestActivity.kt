@@ -2,6 +2,8 @@ package com.prt2121.summon
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.Manifest.permission.SEND_SMS
+import android.Manifest.permission.READ_SMS
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.location.Geocoder
@@ -15,6 +17,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.telephony.SmsManager
+import android.telephony.TelephonyManager
 import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
@@ -47,6 +50,7 @@ class RequestActivity : AppCompatActivity(),
   val rootLayout: LinearLayout by bindView(R.id.request_root_layout)
   val messageEditText: EditText by bindView(R.id.message_editText)
 
+  private var myNumber: String = ""
   private var phoneNumber: String? = null
   private var pictureUri: Uri? = null
   private var titleVisible = false
@@ -74,6 +78,11 @@ class RequestActivity : AppCompatActivity(),
 
     imageView.onCreate(null)
     imageView.getMapAsync(this)
+
+    requestPermission(READ_SMS, REQUEST_PHONE_NUMBER_PERMISSION, "Allow Summon to get your phone number.") {
+      val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+      myNumber = telephonyManager.line1Number
+    }
   }
 
   private fun sendSms(phoneNumber: String, message: String) {
@@ -86,7 +95,8 @@ class RequestActivity : AppCompatActivity(),
         }
         else -> "" to ""
       }
-      val fromUser = User("Prat", "Tanapaisankit", "9086467097")
+      println("fromUser ${SummonApp.app!!.user!!.firstName}, ${SummonApp.app!!.user!!.lastName}, ${myNumber}")
+      val fromUser = User(SummonApp.app!!.user!!.firstName, SummonApp.app!!.user!!.lastName, myNumber)
       val toUser = User(names.first, names.second, phoneNumber)
       val invite = Invite(null,
           fromUser,
@@ -118,7 +128,6 @@ class RequestActivity : AppCompatActivity(),
         }
         return false
       }
-
     })
 
     val screenSize = Point()
@@ -271,6 +280,7 @@ class RequestActivity : AppCompatActivity(),
     private val ALPHA_ANIMATIONS_DURATION = 200
     private val REQUEST_LOCATION_PERMISSION = 0
     private val REQUEST_SMS_PERMISSION = 1
+    private val REQUEST_PHONE_NUMBER_PERMISSION = 2
     val NAME_EXTRA = "name_extra"
     val PHONE_NUMBER_EXTRA = "phone_number_extra"
     val PICTURE_URI_EXTRA = "picture_uri_extra"
