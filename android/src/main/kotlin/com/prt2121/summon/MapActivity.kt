@@ -73,7 +73,23 @@ class MapsActivity : FragmentActivity() {
         if (dropOffLatLng == null) {
           Toast.makeText(this@MapsActivity, "Please enter your location", Toast.LENGTH_LONG).show()
         } else {
-          // TODO start estimate
+          Uber.instance.api
+              .timeEstimates(TokenStorage(this@MapsActivity).retrieve()!!, 40.750572, -73.995713)
+              .subscribeOn(Schedulers.io())
+              .subscribe({
+                it.times.forEach { println("${it.display_name} ${it.estimate}") }
+              }, {
+                println(it.message)
+              })
+
+          Uber.instance.api
+              .priceEstimates(TokenStorage(this@MapsActivity).retrieve()!!, 40.750572, -73.995713, 40.7234175, -74.3093816)
+              .subscribeOn(Schedulers.io())
+              .subscribe({
+                it.prices.forEach { println("${it.display_name} ${it.estimate}") }
+              }, {
+                println(it.message)
+              })
         }
       }
     })

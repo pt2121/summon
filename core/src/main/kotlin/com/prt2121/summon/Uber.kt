@@ -1,10 +1,13 @@
 package com.prt2121.summon
 
+import com.prt2121.summon.model.PriceEstimateList
+import com.prt2121.summon.model.TimeEstimateList
 import retrofit.*
 import retrofit.http.GET
 import retrofit.http.Header
 import retrofit.http.POST
 import retrofit.http.Query
+import rx.Observable
 
 /**
  * Created by pt2121 on 12/1/15.
@@ -15,7 +18,10 @@ class Uber {
   val api = api()
 
   private fun api(): Api {
-    val retrofit = Retrofit.Builder().baseUrl(API_URL).addConverterFactory(GsonConverterFactory.create()).build()
+    val retrofit = Retrofit.Builder().baseUrl(API_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .build()
     return retrofit.create(Api::class.java)
   }
 
@@ -56,6 +62,14 @@ class Uber {
     })
   }
 
+  fun timeEstimates(authToken: String, startLatitude: Double, startLongitude: Double): Observable<TimeEstimateList> {
+    return api.timeEstimates(authToken, startLatitude, startLongitude)
+  }
+
+  fun priceEstimates(authToken: String, startLatitude: Double, startLongitude: Double, endLatitude: Double, endLongitude: Double): Observable<PriceEstimateList> {
+    return api.priceEstimates(authToken, startLatitude, startLongitude, endLatitude, endLongitude)
+  }
+
   public interface LoginApi {
     @POST("/oauth/token")
     fun authToken(@Query("client_secret") clientSecret: String,
@@ -69,6 +83,18 @@ class Uber {
   public interface Api {
     @GET("/v1/me")
     fun me(@Header("Authorization") authToken: String): Call<UberUser>
+
+    @GET("/v1/estimates/time")
+    fun timeEstimates(@Header("Authorization") authToken: String,
+                      @Query("start_latitude") startLatitude: Double,
+                      @Query("start_longitude") startLongitude: Double): Observable<TimeEstimateList>
+
+    @GET("/v1/estimates/price")
+    fun priceEstimates(@Header("Authorization") authToken: String,
+                       @Query("start_latitude") startLatitude: Double,
+                       @Query("start_longitude") startLongitude: Double,
+                       @Query("end_latitude") endLatitude: Double,
+                       @Query("end_longitude") endLongitude: Double): Observable<PriceEstimateList>
   }
 
   companion object {

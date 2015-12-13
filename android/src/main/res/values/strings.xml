@@ -6,4 +6,9 @@
   <string name="request">Request</string>
   <string name="drop_off_address">Drop-off Address</string>
   <string name="estimate_time_and_cost">Estimate Time and Cost</string>
+  <string name="product_name">Product Name</string>
+  <string name="cost">Cost</string>
+  <string name="time">Time</string>
+  <string name="uber_product_image">Uber product image</string>
+  <string name="estimates">Estimates</string>
 </resources>
