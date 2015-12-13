@@ -96,7 +96,7 @@ class RequestActivity : AppCompatActivity(),
             invite.status == Status.PENDING -> Snackbar.make(rootLayout, "Waiting for a response", Snackbar.LENGTH_LONG).show()
             invite.status == Status.REJECT -> Snackbar.make(rootLayout, "Your request was rejected!", Snackbar.LENGTH_LONG).show()
             invite.status == Status.CANCEL -> Snackbar.make(rootLayout, "Your request was cancelled!", Snackbar.LENGTH_LONG).show()
-            invite.status == Status.ACCEPT -> println("Yeah") // TODO
+            invite.status == Status.ACCEPT -> println("Yeah")
           }
         }
       }

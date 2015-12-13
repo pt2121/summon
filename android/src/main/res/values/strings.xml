@@ -4,4 +4,6 @@
   <string name="search_title">Search</string>
   <string name="hint_your_message">Your message</string>
   <string name="request">Request</string>
+  <string name="drop_off_address">Drop-off Address</string>
+  <string name="estimate_time_and_cost">Estimate Time and Cost</string>
 </resources>
