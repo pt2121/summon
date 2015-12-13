@@ -12,10 +12,14 @@ import android.widget.Toast
 class LoginActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    window.requestFeature(Window.FEATURE_PROGRESS)
+    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
+    requestWindowFeature(Window.FEATURE_PROGRESS)
 
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
+
+    setProgressBarIndeterminateVisibility(true)
+    setProgressBarVisibility(true)
 
     val webView = findViewById(R.id.web_view) as WebView
     webView.settings.javaScriptEnabled = true
@@ -46,8 +50,15 @@ class LoginActivity : AppCompatActivity() {
       if (url.startsWith(Uber.REDIRECT_URL)) {
         val uri = Uri.parse(url)
         val authCode = uri.getQueryParameter("code")
-        Uber.instance.auth(authCode, TokenStorage(this@LoginActivity)) { success ->
-          println("SUCCESS!!! authCode $authCode")
+        Uber.instance.auth(authCode) { token ->
+          if(token != null) {
+            TokenStorage(this@LoginActivity).save(token)
+            Uber.instance.me(token) {
+              user -> SummonApp.app!!.user = user
+              setProgressBarIndeterminateVisibility(false)
+              setProgressBarVisibility(false)
+            }
+          }
         }
         return true
       }
