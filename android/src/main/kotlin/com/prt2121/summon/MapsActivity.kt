@@ -27,6 +27,7 @@ import rx.schedulers.Schedulers
 class MapsActivity : FragmentActivity() {
   val dropOffAddress: EditText by bindView(R.id.dropOffAddressEditText)
   val estimateButton: Button by bindView(R.id.estimateButton)
+  private var pickupLatLng: LatLng? = null
   private var dropOffLatLng: LatLng? = null
   private var subscription: Subscription? = null
 
@@ -35,7 +36,7 @@ class MapsActivity : FragmentActivity() {
     setContentView(R.layout.activity_maps)
 
     val extras = intent?.extras
-    val pickupLatLng = extras?.get(PICKUP_LATLNG_EXTRA) ?: LatLng(40.750572, -73.995713)
+    pickupLatLng = if (extras?.get(PICKUP_LATLNG_EXTRA) != null) extras?.get(PICKUP_LATLNG_EXTRA) as LatLng else LatLng(40.750572, -73.995713)
     dropOffLatLng = if (extras?.get(DROPOFF_LATLNG_EXTRA) != null) extras?.get(DROPOFF_LATLNG_EXTRA) as LatLng else LatLng(40.7234175, -74.3093816)
     if (extras?.get(DROPOFF_ADDRESS_EXTRA) != null) {
       dropOffAddress.setText(extras?.getString(DROPOFF_ADDRESS_EXTRA))
@@ -73,23 +74,7 @@ class MapsActivity : FragmentActivity() {
         if (dropOffLatLng == null) {
           Toast.makeText(this@MapsActivity, "Please enter your location", Toast.LENGTH_LONG).show()
         } else {
-          Uber.instance.api
-              .timeEstimates(TokenStorage(this@MapsActivity).retrieve()!!, 40.750572, -73.995713)
-              .subscribeOn(Schedulers.io())
-              .subscribe({
-                it.times.forEach { println("${it.display_name} ${it.estimate}") }
-              }, {
-                println(it.message)
-              })
-
-          Uber.instance.api
-              .priceEstimates(TokenStorage(this@MapsActivity).retrieve()!!, 40.750572, -73.995713, 40.7234175, -74.3093816)
-              .subscribeOn(Schedulers.io())
-              .subscribe({
-                it.prices.forEach { println("${it.display_name} ${it.estimate}") }
-              }, {
-                println(it.message)
-              })
+          UberEstimateActivity.start(this@MapsActivity, pickupLatLng!!, dropOffLatLng!!)
         }
       }
     })

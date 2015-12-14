@@ -5,7 +5,7 @@ package com.prt2121.summon.model
  */
 data class PriceEstimate(
     val product_id: String,
-    val currency_code: String,
+    val currency_code: String?,
     val localized_display_name: String,
     val display_name: String,
     val estimate: String,

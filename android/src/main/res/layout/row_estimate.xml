@@ -15,81 +15,94 @@
     card_view:cardElevation="1dp"
     >
 
-  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  <LinearLayout
+      android:orientation="horizontal"
       android:layout_width="match_parent"
-      android:layout_height="72dp"
-      android:layout_marginEnd="@dimen/activity_horizontal_margin"
-      android:layout_marginLeft="@dimen/activity_horizontal_margin"
-      android:layout_marginRight="@dimen/activity_horizontal_margin"
-      android:layout_marginStart="@dimen/activity_horizontal_margin"
+      android:layout_height="match_parent"
+      android:weightSum="1"
       >
 
-    <ImageView
-        android:id="@+id/vehicleImageView"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/uber_product_image"
-        android:scaleType="centerInside"
-        />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="0dp"
+        android:layout_height="72dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_weight="0.7"
+        >
 
-    <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/vehicleImageView"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_toEndOf="@+id/vehicleImageView"
-        android:layout_toRightOf="@+id/vehicleImageView"
-        android:text="@string/product_name"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/primary_dark"
-        />
+      <ImageView
+          android:id="@+id/vehicleImageView"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_centerVertical="true"
+          android:adjustViewBounds="true"
+          android:contentDescription="@string/uber_product_image"
+          android:scaleType="centerInside"
+          />
 
-    <TextView
-        android:id="@+id/costTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/vehicleImageView"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_toEndOf="@+id/vehicleImageView"
-        android:layout_toRightOf="@+id/vehicleImageView"
-        android:text="@string/cost"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        />
+      <TextView
+          android:id="@+id/nameTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignTop="@+id/vehicleImageView"
+          android:layout_marginLeft="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_toEndOf="@+id/vehicleImageView"
+          android:layout_toRightOf="@+id/vehicleImageView"
+          android:text="@string/product_name"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textColor="@color/primary"
+          android:textStyle="bold"
+          />
 
-    <TextView
-        android:id="@+id/timeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/costTextView"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@+id/costTextView"
-        android:layout_toRightOf="@+id/costTextView"
-        android:text="@string/time"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="italic"
-        />
+      <TextView
+          android:id="@+id/costTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignBottom="@+id/vehicleImageView"
+          android:layout_marginLeft="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_toEndOf="@+id/vehicleImageView"
+          android:layout_toRightOf="@+id/vehicleImageView"
+          android:text="@string/cost"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          android:textColor="@color/light_slate_gray"
+          />
+
+      <TextView
+          android:id="@+id/timeTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignTop="@+id/costTextView"
+          android:layout_marginLeft="8dp"
+          android:layout_marginStart="8dp"
+          android:layout_toEndOf="@+id/costTextView"
+          android:layout_toRightOf="@+id/costTextView"
+          android:text="@string/time"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          android:textStyle="italic"
+          android:textColor="@color/light_slate_gray"
+          />
+
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/requestButton"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/vehicleImageView"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/vehicleImageView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:text="@string/request"
-        android:textColor="@color/primary"
+        android:background="@android:color/white"
+        android:textColor="@color/accent_amber"
+        android:textStyle="bold"
+        android:layout_weight="0.3"
         />
 
-  </RelativeLayout>
+  </LinearLayout>
 
 </android.support.v7.widget.CardView>
