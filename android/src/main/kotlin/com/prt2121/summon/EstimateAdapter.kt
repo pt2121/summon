@@ -24,13 +24,8 @@ class EstimateAdapter(val estimates: List<Estimate>, val listener: EstimateAdapt
   override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
     val estimate = estimates[i]
     viewHolder.nameTextView.text = estimate.displayName
-    val icon = when {
-      estimate.displayName == "uberX" -> R.drawable.ic_uber_x
-      estimate.displayName == "uberXL" -> R.drawable.ic_uber_xl
-      estimate.displayName == "UberBLACK" -> R.drawable.ic_uber_black
-      estimate.displayName == "UberSUV" -> R.drawable.ic_uber_suv
-      else -> R.drawable.ic_uber_x
-    }
+
+    val icon = Utils.findIcon(estimate.displayName)
 
     viewHolder.vehicleImageView.setImageResource(icon)
     viewHolder.costTextView.text = estimate.priceEstimate

@@ -1,7 +1,9 @@
 package com.prt2121.summon
 
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -40,7 +42,18 @@ class UberEstimateActivity : AppCompatActivity(), EstimateAdapter.Listener {
   }
 
   override fun onRequest(imageView: View, estimate: Estimate) {
-
+    val intent = Intent(this@UberEstimateActivity, RequestDetailActivity::class.java)
+    intent.putExtra(RequestDetailActivity.PRODUCT_NAME, estimate.displayName)
+    intent.putExtra(RequestDetailActivity.PRODUCT_ID, estimate.productId)
+    intent.putExtra(RequestDetailActivity.START_LOCATION, pickup)
+    intent.putExtra(RequestDetailActivity.DESTINATION_LOCATION, dropOff)
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+      startActivity(intent,
+          ActivityOptions.makeSceneTransitionAnimation(
+              this@UberEstimateActivity, imageView, "detail_element").toBundle())
+    } else {
+      startActivity(intent)
+    }
   }
 
   companion object {

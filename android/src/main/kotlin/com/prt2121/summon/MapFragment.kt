@@ -56,7 +56,7 @@ class MapFragment : SupportMapFragment() {
 
   companion object {
     val TAG = MapFragment::class.java.simpleName
-    private val ZOOM = 14f
+    private val ZOOM = 12f
     fun newInstance(pickupLatLng: LatLng, dropOffLatLng: LatLng): MapFragment {
       val mapFragment = MapFragment()
       mapFragment.dropOffLatLng = dropOffLatLng

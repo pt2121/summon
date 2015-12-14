@@ -50,8 +50,8 @@ class UberEstimateFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     val token = TokenStorage(activity).retrieve()
-    val timeEstimateObservable = Uber.instance.api.timeEstimates(token!!, pickup!!.latitude, pickup!!.longitude)
-    val priceEstimateListObservable = Uber.instance.api.priceEstimates(token,
+    val timeEstimateObservable = Uber.instance.timeEstimates(token!!, pickup!!.latitude, pickup!!.longitude)
+    val priceEstimateListObservable = Uber.instance.priceEstimates(token,
         pickup!!.latitude,
         pickup!!.longitude,
         destination!!.latitude,

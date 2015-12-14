@@ -27,6 +27,7 @@
       android:paddingLeft="@dimen/activity_horizontal_margin"
       android:paddingRight="@dimen/activity_horizontal_margin"
       android:singleLine="true"
+      android:textColorHint="@android:color/white"
       android:textColor="@color/primary"
       />
 
@@ -45,9 +46,9 @@
       android:background="@android:color/white"
       android:paddingLeft="@dimen/activity_horizontal_margin"
       android:paddingRight="@dimen/activity_horizontal_margin"
-      android:text="@string/estimate_time_and_cost"
-      android:textColor="@color/primary"
-      android:transitionName="shared_element"
+      android:text="@string/get_estimate_time_and_cost"
+      android:textStyle="bold"
+      android:textColor="@color/accent_amber"
       />
 
 </RelativeLayout>

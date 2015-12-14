@@ -5,10 +5,14 @@
   <string name="hint_your_message">Your message</string>
   <string name="request">Request</string>
   <string name="drop_off_address">Drop-off Address</string>
-  <string name="estimate_time_and_cost">Estimate Time and Cost</string>
+  <string name="get_estimate_time_and_cost">Get Estimate Time and Cost</string>
   <string name="product_name">Product Name</string>
   <string name="cost">Cost</string>
   <string name="time">Time</string>
   <string name="uber_product_image">Uber product image</string>
   <string name="estimates">Estimates</string>
+  <string name="driver_name">Driver Name</string>
+  <string name="driver_phone_number">Phone Number</string>
+  <string name="driver_rating">Rating</string>
+  <string name="order_id">Order Id</string>
 </resources>

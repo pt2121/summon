@@ -4,6 +4,7 @@ package com.prt2121.summon
  * Created by pt2121 on 12/13/15.
  */
 import android.content.Context
+import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
@@ -36,10 +37,10 @@ class MapsActivity : FragmentActivity() {
     setContentView(R.layout.activity_maps)
 
     val extras = intent?.extras
-    pickupLatLng = if (extras?.get(PICKUP_LATLNG_EXTRA) != null) extras?.get(PICKUP_LATLNG_EXTRA) as LatLng else LatLng(40.750572, -73.995713)
-    dropOffLatLng = if (extras?.get(DROPOFF_LATLNG_EXTRA) != null) extras?.get(DROPOFF_LATLNG_EXTRA) as LatLng else LatLng(40.7234175, -74.3093816)
-    if (extras?.get(DROPOFF_ADDRESS_EXTRA) != null) {
-      dropOffAddress.setText(extras?.getString(DROPOFF_ADDRESS_EXTRA))
+    pickupLatLng = if (extras?.get(PICKUP_LATLNG_EXTRA) != null) extras?.get(PICKUP_LATLNG_EXTRA) as LatLng else LatLng(40.7163966, -74.3322192)
+    dropOffLatLng = if (extras?.get(DROP_OFF_LATLNG_EXTRA) != null) extras?.get(DROP_OFF_LATLNG_EXTRA) as LatLng else LatLng(40.7234175, -74.3093816)
+    if (extras?.get(DROP_OFF_ADDRESS_EXTRA) != null) {
+      dropOffAddress.setText(extras?.getString(DROP_OFF_ADDRESS_EXTRA))
     } else {
       dropOffAddress.setText("")
     }
@@ -113,7 +114,15 @@ class MapsActivity : FragmentActivity() {
   companion object {
     val TAG = MapsActivity::class.java.simpleName
     val PICKUP_LATLNG_EXTRA = "pickup_latlng_extra"
-    val DROPOFF_LATLNG_EXTRA = "dropoff_latlng_extra"
-    val DROPOFF_ADDRESS_EXTRA = "dropoff_address_extra"
+    val DROP_OFF_LATLNG_EXTRA = "drop_off_latlng_extra"
+    val DROP_OFF_ADDRESS_EXTRA = "drop_off_address_extra"
+
+    fun startMapActivity(context: Context, pickupLatLng: LatLng, dropOffLatLng: LatLng, dropOffAddress: String) {
+      val intent = Intent(context, MapsActivity::class.java)
+      intent.putExtra(PICKUP_LATLNG_EXTRA, pickupLatLng)
+      intent.putExtra(DROP_OFF_LATLNG_EXTRA, dropOffLatLng)
+      intent.putExtra(DROP_OFF_ADDRESS_EXTRA, dropOffAddress)
+      context.startActivity(intent)
+    }
   }
 }

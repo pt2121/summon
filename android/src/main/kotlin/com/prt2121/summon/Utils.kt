@@ -29,4 +29,14 @@ object Utils {
     // Verify that each required permission has been granted, otherwise return false.
     return grantResults.all { it == PackageManager.PERMISSION_GRANTED }
   }
+
+  fun findIcon(displayName: String): Int {
+    return when (displayName) {
+      "uberX" -> R.drawable.ic_uber_x
+      "uberXL" -> R.drawable.ic_uber_xl
+      "UberBLACK" -> R.drawable.ic_uber_black
+      "UberSUV" -> R.drawable.ic_uber_suv
+      else -> R.drawable.ic_uber_x
+    }
+  }
 }

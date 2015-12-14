@@ -1,12 +1,8 @@
 package com.prt2121.summon
 
-import com.prt2121.summon.model.PriceEstimateList
-import com.prt2121.summon.model.TimeEstimateList
+import com.prt2121.summon.model.*
 import retrofit.*
-import retrofit.http.GET
-import retrofit.http.Header
-import retrofit.http.POST
-import retrofit.http.Query
+import retrofit.http.*
 import rx.Observable
 
 /**
@@ -70,6 +66,18 @@ class Uber {
     return api.priceEstimates(authToken, startLatitude, startLongitude, endLatitude, endLongitude)
   }
 
+  fun createRequest(authToken: String, requestRequest: RequestRequest): Observable<Request> {
+    return api.createRequest(authToken, requestRequest)
+  }
+
+  fun cancelRequest(authToken: String, requestId: String): Observable<String> {
+    return api.cancelRequest(authToken, requestId)
+  }
+
+  fun getRequestStatus(authToken: String, requestId: String): Observable<Request> {
+    return api.getRequestStatus(authToken, requestId)
+  }
+
   public interface LoginApi {
     @POST("/oauth/token")
     fun authToken(@Query("client_secret") clientSecret: String,
@@ -95,6 +103,18 @@ class Uber {
                        @Query("start_longitude") startLongitude: Double,
                        @Query("end_latitude") endLatitude: Double,
                        @Query("end_longitude") endLongitude: Double): Observable<PriceEstimateList>
+
+    @POST("/v1/requests")
+    fun createRequest(@Header("Authorization") authToken: String,
+                      @Body requestRequest: RequestRequest): Observable<Request>
+
+    @DELETE("/v1/requests/{request_id}")
+    fun cancelRequest(@Header("Authorization") authToken: String,
+                      @Path("request_id") requestId: String): Observable<String>
+
+    @GET("/v1/requests/{request_id}")
+    fun getRequestStatus(@Header("Authorization") authToken: String,
+                         @Path("request_id") requestId: String): Observable<Request>
   }
 
   companion object {

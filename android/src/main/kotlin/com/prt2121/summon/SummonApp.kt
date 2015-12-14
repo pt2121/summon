@@ -1,6 +1,7 @@
 package com.prt2121.summon
 
 import android.app.Application
+import com.prt2121.summon.model.UberUser
 
 /**
  * Created by pt2121 on 12/13/15.

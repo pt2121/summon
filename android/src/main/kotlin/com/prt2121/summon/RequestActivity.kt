@@ -89,14 +89,17 @@ class RequestActivity : AppCompatActivity(),
         sendSms(phoneNumber!!, messageEditText.text.toString())
       }
       if (requestButton.text.equals("Check Status") && currentInvite != null) {
-        InviteApi.instance.query(currentInvite!!._id!!) {
-          invite ->
+        InviteApi.instance.query(currentInvite!!._id!!) { invite ->
           when {
             invite == null -> Snackbar.make(rootLayout, "Something's wrong", Snackbar.LENGTH_LONG).show()
             invite.status == Status.PENDING -> Snackbar.make(rootLayout, "Waiting for a response", Snackbar.LENGTH_LONG).show()
             invite.status == Status.REJECT -> Snackbar.make(rootLayout, "Your request was rejected!", Snackbar.LENGTH_LONG).show()
             invite.status == Status.CANCEL -> Snackbar.make(rootLayout, "Your request was cancelled!", Snackbar.LENGTH_LONG).show()
-            invite.status == Status.ACCEPT -> println("Yeah")
+            invite.status == Status.ACCEPT -> {
+              val pickupLatLngString = invite.pickupAddress.split(",").map { it.toDouble() }
+              val pickupLatLng = LatLng(pickupLatLngString[0], pickupLatLngString[1])
+              MapsActivity.startMapActivity(this@RequestActivity, pickupLatLng, latLng!!, addressTextView.text.toString())
+            }
           }
         }
       }
