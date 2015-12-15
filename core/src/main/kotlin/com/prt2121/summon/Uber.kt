@@ -119,10 +119,10 @@ class Uber {
 
   companion object {
     val LOGIN_BASE_URL = "https://login.uber.com/"
-    val API_URL = "https://sandbox-api.uber.com/"
-    val SECRET = "SiTDLslIxQOjSzRTRoAN9jllM7RqRr5r_fVeOvp0"
-    val ID = "SbShEB9EQK8Kz1NwkUyVMkFdrQtYhRhE"
-    val REDIRECT_URL = "https://localhost:8000"
+    val API_URL = ""
+    val SECRET = ""
+    val ID = ""
+    val REDIRECT_URL = ""
     val GRANT_TYPE = "authorization_code"
     val LOGIN_URL = "${LOGIN_BASE_URL}oauth/authorize?response_type=code&client_id=$ID&scope=profile+request&redirect_uri=https%3A%2F%2Flocalhost:8000"
     val instance = Uber()
