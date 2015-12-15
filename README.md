@@ -19,7 +19,7 @@ Frontend code is at [prt2121/invite-app](https://github.com/prt2121/invite-app).
 * com.google.android.geo.API_KEY in AndroidManifest
 * Uber API Key in Uber.kt
 
-![screen record](http://i.imgur.com/o0msIZj.gif) ![screen record](http://i.imgur.com/5WEZvwD.gif)
+#####Screen records : [1](http://i.imgur.com/o0msIZj.gifv), [2](http://i.imgur.com/5WEZvwD.gifv)
 
 #####Android Screenshots
 <img src="http://i.imgur.com/z5ZBwSl.png" alt="android 01" height="480" /> <img src="http://i.imgur.com/XT4k8iS.png" alt="android 02" height="480" /> <img src="http://i.imgur.com/1xYEljK.png" alt="android 03" height="480" />
