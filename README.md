@@ -1,7 +1,7 @@
 ### Summon
 
-Go Cross-Platform with Kotlin! November 25 to December 14 2015
-by RoboVM and JetBrains
+*[Go Cross-Platform with Kotlin! November 25 to December 14 2015
+by RoboVM and JetBrains](https://robovm.com/kotlin-contest/)*
 
 Summon allows you to request Uber for your friends so you can invite your friends to your place!
 Your invited friends don't even need Summon to accept or reject the invite.
