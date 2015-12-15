@@ -75,7 +75,7 @@ class ContactsFragment : Fragment(), ContactViewHolder.ClickListener {
       searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
       searchView.setIconifiedByDefault(false)
       RxSearchView.queryTextChanges(searchView)
-          .filter { it.length > 3 }
+          .filter { it.length >= 3 }
           .throttleWithTimeout(2, TimeUnit.MILLISECONDS)
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe({
