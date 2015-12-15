@@ -15,6 +15,12 @@ Frontend code is at [prt2121/invite-app](https://github.com/prt2121/invite-app).
 
 ***The app idea is shamelessly stolen from [teleportapp](https://www.teleportapp.co/).***
 
+#####Required API KEYs
+* com.google.android.geo.API_KEY in AndroidManifest
+* Uber API Key in Uber.kt
+
+![screen record](http://i.imgur.com/o0msIZj.gif) ![screen record](http://i.imgur.com/5WEZvwD.gif)
+
 #####Android Screenshots
 <img src="http://i.imgur.com/z5ZBwSl.png" alt="android 01" height="480" /> <img src="http://i.imgur.com/XT4k8iS.png" alt="android 02" height="480" /> <img src="http://i.imgur.com/1xYEljK.png" alt="android 03" height="480" />
 <img src="http://i.imgur.com/csBHVTt.png" alt="android 04" height="480" /> <img src="http://i.imgur.com/vzeineu.png" alt="android 05" height="480" /> <img src="http://i.imgur.com/zGoRdGp.png" alt="android 06" height="480" />
