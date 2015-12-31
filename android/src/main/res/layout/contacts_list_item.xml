@@ -1,66 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:background="@color/primary_dark"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
     android:clickable="true"
     >
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
+  <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+      style="@style/width_match_parent_max_640"
+      android:layout_height="match_parent"
+      android:layout_margin="4dp"
       android:background="@color/primary_dark"
       >
 
-    <ImageView
-        android:id="@+id/profile_image_view"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_margin="8dp"
-        android:transitionName="profile"
-        android:scaleType="centerCrop"
-        />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/primary_dark"
         >
 
-      <TextView
-          android:id="@+id/contact_title"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="4dp"
-          android:layout_marginEnd="8dp"
-          android:layout_marginStart="8dp"
-          android:layout_marginTop="4dp"
-          android:gravity="center_vertical"
-          android:maxLines="1"
-          android:textColor="@color/accent"
-          android:textSize="18sp"
+      <ImageView
+          android:id="@+id/profile_image_view"
+          android:layout_width="56dp"
+          android:layout_height="56dp"
+          android:layout_margin="8dp"
+          android:transitionName="profile"
+          android:scaleType="centerCrop"
           />
 
-      <TextView
-          android:id="@+id/phone_number_text_view"
+      <LinearLayout
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="8dp"
-          android:layout_marginEnd="8dp"
-          android:layout_marginLeft="8dp"
-          android:layout_marginRight="8dp"
-          android:layout_marginStart="8dp"
-          android:layout_marginTop="4dp"
-          android:maxLines="20"
-          android:textColor="@color/primary"
-          android:textSize="16sp"
-          />
+          android:layout_height="match_parent"
+          android:gravity="center_vertical"
+          android:orientation="vertical"
+          android:layout_marginLeft="4dp"
+          android:layout_marginStart="4dp"
+          >
+
+        <TextView
+            android:id="@+id/contact_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textColor="@color/accent"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:id="@+id/phone_number_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:maxLines="20"
+            android:textColor="@color/primary"
+            android:textSize="16sp"
+            />
+      </LinearLayout>
     </LinearLayout>
-  </LinearLayout>
-</android.support.v7.widget.CardView>
+  </android.support.v7.widget.CardView>
+</LinearLayout>
