@@ -1,5 +1,7 @@
 ### Summon
 
+***[Summon won Kotlin/Robovm Contest (Grand Prize)](https://robovm.com/kotlin-contest-and-the-winner-is/)***
+
 *[Go Cross-Platform with Kotlin! November 25 to December 14 2015
 by RoboVM and JetBrains](https://robovm.com/kotlin-contest/)*
 
